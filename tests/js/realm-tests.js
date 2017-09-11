@@ -311,8 +311,24 @@ module.exports = {
     },
 
     testRealmCreateUpsert: function() {
-        const realm = new Realm({schema: [schemas.IntPrimary, schemas.StringPrimary, schemas.AllTypes, schemas.TestObject, schemas.LinkToAllTypes]});
-        realm.write(() => {
+        let AllTypes = {
+    name: 'AllTypesObject',
+    primaryKey: 'primaryCol',
+    properties: {
+        primaryCol:        'string',
+        boolCol:           'bool',
+        intCol:            'int',
+        floatCol:          'float',
+        doubleCol:         'double',
+        stringCol:         'string',
+        dateCol:           'date',
+        dataCol:           'data',
+        objectCol:         'TestObject',
+        arrayCol:          {type: 'list', objectType: 'TestObject'},
+    }
+};
+        const realm = new Realm({schema: [AllTypes, schemas.TestObject]});
+        realm.write(function() {
             const values = {
                 primaryCol: '0',
                 boolCol:    true,
@@ -399,7 +415,7 @@ module.exports = {
             TestCase.assertEqual(obj1.objectCol, null);
 
             // test with string primaries
-            const obj =realm.create('StringPrimaryObject', {
+            const obj = realm.create('StringPrimaryObject', {
                 primaryCol: '0',
                 valueCol: 0
             });
@@ -784,8 +800,9 @@ module.exports = {
     },
 
     testSchema: function() {
-        const originalSchema = [schemas.TestObject, schemas.BasicTypes, schemas.NullableBasicTypes, schemas.IndexedTypes, schemas.IntPrimary,
-            schemas.PersonObject, schemas.LinkTypes, schemas.LinkingObjectsObject];
+        const originalSchema = [schemas.TestObject, schemas.AllTypes, schemas.LinkToAllTypes,
+                                schemas.IndexedTypes, schemas.IntPrimary, schemas.PersonObject,
+                                schemas.LinkTypes, schemas.LinkingObjectsObject];
 
         const schemaMap = {};
         originalSchema.forEach(objectSchema => {
@@ -869,7 +886,7 @@ module.exports = {
                 const p1 = realm.create('PersonObject', { name: 'Ari', age: 10 });
                 p1.age = "Ten";
             });
-        }, new Error("PersonObject.age must be of type 'number', got (Ten)"));
+        }, new Error("PersonObject.age must be of type 'number', got 'string' ('Ten')"));
     },
 
     testErrorMessageFromInvalidCreate: function() {
@@ -879,7 +896,7 @@ module.exports = {
             realm.write(() => {
                 const p1 = realm.create('PersonObject', { name: 'Ari', age: 'Ten' });
             });
-        }, new Error("PersonObject.age must be of type 'number', got (Ten)"));
+        }, new Error("PersonObject.age must be of type 'number', got 'string' ('Ten')"));
     },
 
     testValidTypesForListProperties: function() {

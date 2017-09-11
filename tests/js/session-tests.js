@@ -29,7 +29,7 @@ const isNodeProccess = (typeof process === 'object' && process + '' === '[object
 
 function node_require(module) {
     return require(module);
-}  
+}
 
 let tmp;
 let fs;
@@ -275,7 +275,7 @@ module.exports = {
                 });
             });
     },
-    
+
     testProgressNotificationsForRealmOpenAsync() {
         if (!isNodeProccess) {
             return Promise.resolve();
@@ -292,7 +292,7 @@ module.exports = {
                         let progressNotificationCalled = false;
                         let config = {
                             sync: { user, url: `realm://localhost:9080/~/${realmName}`,
-                                _onDownloadProgress: (transferred, total) => { 
+                                _onDownloadProgress: (transferred, total) => {
                                     progressNotificationCalled = true
                                 },
                             },
@@ -647,3 +647,5 @@ module.exports = {
             });
     },  
 }
+
+module.exports = {};

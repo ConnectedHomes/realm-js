@@ -743,7 +743,8 @@ void RealmClass<T>::wait_for_download_completion(ContextType ctx, FunctionType, 
             }
 
             ObjectType object = Object::create_empty(protected_ctx);
-            Object::set_property(protected_ctx, object, "message", Value::from_string(protected_ctx, "Cannot asynchronously open synced Realm, because the associated session previously experienced a fatal error"));
+            Object::set_property(protected_ctx, object, "message",
+                                 Value::from_string(protected_ctx, "Cannot asynchronously open synced Realm because the associated session previously experienced a fatal error"));
             Object::set_property(protected_ctx, object, "errorCode", Value::from_number(protected_ctx, 1));
 
             ValueType callback_arguments[1];
